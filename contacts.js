@@ -21,11 +21,12 @@ async function getContactById(contactId) {
 async function removeContact(contactId) {
   const contacts = await listContacts();
   const contactIndex = contacts.findIndex(
-    (contact) => contact.id === contactId.toString()
+    (contact) => contact.id === contactId
   );
 
   if (contactIndex === -1) {
-    throw new Error(`Contact not found: ${contactId}`);
+    console.log("Contact not found:", null);
+    return null;
   }
 
   const removedContact = contacts.splice(contactIndex, 1)[0];
@@ -43,17 +44,17 @@ async function addContact(name, email, phone) {
 
   if (existingContact) {
     console.log(
-        "A contact with this email address or phone number already exists"
+      "A contact with this email address or phone number already exists"
     );
     return null;
+  } else {
+    const newContact = { id: uuidv4(), name, email, phone };
+    contacts.push(newContact);
+
+    await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+
+    return newContact;
   }
-
-  const newContact = { id: uuidv4(), name, email, phone };
-  contacts.push(newContact);
-
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-
-  return newContact;
 }
 
 module.exports = { listContacts, getContactById, removeContact, addContact };

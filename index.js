@@ -18,7 +18,12 @@ async function invokeAction(argv) {
 
       case "get":
         const contact = await getContactById(id);
-        console.log(contact || "Contact not found");
+        if (!contact) {
+          console.log(`Contact not found: ${contact}`);
+        } else {
+          console.log(contact);
+        }
+
         break;
 
       case "add":
